@@ -35,7 +35,7 @@ void List::pushBack ( Board *d )
 {
   ListNode *p = new ListNode( d );
 
-  #ifdef DEBUG
+  #ifdef DEBUG2
     cout << "in list::pushBack" << endl;
   #endif
 
@@ -51,7 +51,7 @@ void List::pushBack ( Board *d )
   p->prev_->next_ = p;
   len_++;
 
-  #ifdef DEBUG
+  #ifdef DEBUG2
     cout << "leaving list::pushBack" << endl;
   #endif
 
@@ -61,7 +61,7 @@ void List::popBack ( )
 {
   ListNode *p = head_.prev_;
 
-  #ifdef DEBUG
+  #ifdef DEBUG2
     cout << "entering list::popBack" << endl;
   #endif
 
@@ -73,7 +73,7 @@ void List::popBack ( )
   delete p;
   len_--;
 
-  #ifdef DEBUG
+  #ifdef DEBUG2
     cout << "leaving list::popBack" << endl;
   #endif
 }

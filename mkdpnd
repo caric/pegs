@@ -1,5 +1,0 @@
-main.o: main.cpp g.hpp game.hpp list.hpp board.hpp hole.hpp
-game.o: game.cpp game.hpp g.hpp list.hpp board.hpp hole.hpp
-board.o: board.cpp board.hpp g.hpp hole.hpp
-hole.o: hole.cpp hole.hpp g.hpp
-list.o: list.cpp list.hpp g.hpp board.hpp hole.hpp

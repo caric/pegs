@@ -16,19 +16,22 @@ class Board
   // constructors
   Board();
   Board( const Board & );
+  void operator=( const Board & );
   ~Board();
 
   void play();
 
  private:
-  void operator=( const Board & ){}
 
   bool jump( Hole &, Hole *, Hole * );
   void unjump( Hole &, Hole *, Hole * );
 
-  static const int numRows;
+  void setUpAdjacencies();
 
-  Hole **holes_;
+  static const int numRows = 5;
+  static const int numHoles = 15;
+
+  Hole *holes_[numRows];
 
   friend ostream &operator << ( ostream &, const Board & );
   friend class Game;

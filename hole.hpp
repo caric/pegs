@@ -18,15 +18,20 @@ class Hole
  public:
   Hole();
   Hole( contents );
+  Hole( const Hole & );
+  void operator=( const Hole & );
+  ~Hole();
 
  private:
   contents contents_;
-  Hole *se_;
-  Hole *e_;
-  Hole *ne_;
-  Hole *nw_;
-  Hole *w_;
-  Hole *sw_;
+  static const int numDirs = 6;
+  Hole *adj_[numDirs];
+  static const int se_;
+  static const int e_;
+  static const int ne_;
+  static const int nw_;
+  static const int w_;
+  static const int sw_;
 
   friend ostream &operator << ( ostream &, const Hole & );
   friend class Board;

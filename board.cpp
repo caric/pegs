@@ -1,7 +1,5 @@
 #include "board.hpp"
 
-const int Board::numRows = 5;
-
 ostream &operator << ( ostream &os, const Board &b )
 {
   const int width = 2;
@@ -21,20 +19,13 @@ ostream &operator << ( ostream &os, const Board &b )
   return os;
 }
 
-Board::Board(): holes_(NULL)
+Board::Board()
 {
   int i, j;
 
   ////////
   // allocate memory
 
-  holes_ = new Hole*[ numRows ];
-  if ( holes_ == NULL )
-  {
-    cerr << "Error allocating memory for the row pointers.\n";
-    exit( -1 );
-  }
-  
   for ( i = 0; i < numRows; i++ )
   {
     holes_[i] = new Hole[ i+1 ];
@@ -45,60 +36,24 @@ Board::Board(): holes_(NULL)
     }
   }
   holes_[0][0].contents_ = Empty;
+  //holes_[1][1].contents_ = Empty;
+  //holes_[2][2].contents_ = Empty;
 
-  ////////
-  // set up adjacencies
-
-  for ( i = 0; i < numRows; i++ )
-  {
-    for ( j = 0; j < i+1; j++ )
-    {
-      // southeast
-      if ( i < numRows-1 )
-        holes_[i][j].se_ = &(holes_[i+1][j+1]);
-
-      // east
-      if ( j < i )
-        holes_[i][j].e_ = &(holes_[i][j+1]);
-  
-      // northeast
-      if ( (j < i) && (i > 0) )
-        holes_[i][j].ne_ = &(holes_[i-1][j]);
-  
-      // northwest
-      if ( (j > 0) && (i > 0) )
-        holes_[i][j].nw_ = &(holes_[i-1][j-1]);
-  
-      // west
-      if ( j > 0 )
-        holes_[i][j].w_ = &(holes_[i][j-1]);
-  
-      // southwest
-      if ( (i < numRows-1) && (j > 0) )
-        holes_[i][j].sw_ = &(holes_[i+1][j-1]);
-    }
-  }
+  setUpAdjacencies();
 }
 
 Board::Board( const Board &b )
 {
   int i, j;
-  #ifdef DEBUG
+  #ifdef DEBUG2
     cout << "Entering board copy constructor" << endl;
   #endif
 
-  ////////
-  // allocate memory
 
-  holes_ = new Hole*[ numRows ];
-  if ( holes_ == NULL )
-  {
-    cerr << "Error allocating memory for the row pointers.\n";
-    exit( -1 );
-  }
-  
   for ( i = 0; i < numRows; i++ )
   {
+    ////////
+    // allocate memory
     holes_[i] = new Hole[ i+1 ];
     if ( holes_[i] == NULL )
     {
@@ -107,38 +62,24 @@ Board::Board( const Board &b )
     }
   }
 
-  ////////
-  // set up adjacencies
+  setUpAdjacencies();
 
   for ( i = 0; i < numRows; i++ )
   {
     for ( j = 0; j < i+1; j++ )
     {
-      // southeast
-      if ( i < numRows-1 )
-        holes_[i][j].se_ = &(holes_[i+1][j+1]);
-
-      // east
-      if ( j < i )
-        holes_[i][j].e_ = &(holes_[i][j+1]);
-  
-      // northeast
-      if ( (j < i) && (i > 0) )
-        holes_[i][j].ne_ = &(holes_[i-1][j]);
-  
-      // northwest
-      if ( (j > 0) && (i > 0) )
-        holes_[i][j].nw_ = &(holes_[i-1][j-1]);
-  
-      // west
-      if ( j > 0 )
-        holes_[i][j].w_ = &(holes_[i][j-1]);
-  
-      // southwest
-      if ( (i < numRows-1) && (j > 0) )
-        holes_[i][j].sw_ = &(holes_[i+1][j-1]);
+      holes_[i][j] = b.holes_[i][j];
     }
   }
+  #ifdef DEBUG2
+    cout << "leaving board copy constructor" << endl;
+  #endif
+}
+
+void Board::operator=( const Board &b )
+{
+  int i, j;
+
   for ( i = 0; i < numRows; i++ )
   {
     for ( j = 0; j < i+1; j++ )
@@ -146,9 +87,6 @@ Board::Board( const Board &b )
       holes_[i][j].contents_ = b.holes_[i][j].contents_;
     }
   }
-  #ifdef DEBUG
-    cout << "leaving board copy constructor" << endl;
-  #endif
 }
 
 Board::~Board()
@@ -157,17 +95,57 @@ Board::~Board()
   {
     delete[] holes_[i];
   }
-  delete[] holes_;
+}
+
+void Board::setUpAdjacencies()
+{
+  int i, j;
+
+  for ( i = 0; i < numRows; i++ )
+  {
+    for ( j = 0; j < i+1; j++ )
+    {
+      // southeast
+      if ( i < numRows-1 )
+        holes_[i][j].adj_[Hole::se_] = &(holes_[i+1][j+1]);
+
+      // east
+      if ( j < i )
+        holes_[i][j].adj_[Hole::e_] = &(holes_[i][j+1]);
+  
+      // northeast
+      if ( j < i )
+        holes_[i][j].adj_[Hole::ne_] = &(holes_[i-1][j]);
+  
+      // northwest
+      if ( j > 0 )
+        holes_[i][j].adj_[Hole::nw_] = &(holes_[i-1][j-1]);
+  
+      // west
+      if ( j > 0 )
+        holes_[i][j].adj_[Hole::w_] = &(holes_[i][j-1]);
+  
+      // southwest
+      if ( i < numRows-1 )
+        holes_[i][j].adj_[Hole::sw_] = &(holes_[i+1][j]);
+    }
+  }
 }
 
 bool Board::jump( Hole &src, Hole *route, Hole *dest )
 {
   if ( src.contents_ == Empty )
+  {
     return false;
+  }
   if ( route->contents_ == Empty )
+  {
     return false;
+  }
   if ( dest->contents_ == Full )
+  {
     return false;
+  }
   
   src.contents_ = Empty;
   route->contents_ = Empty;

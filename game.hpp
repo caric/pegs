@@ -4,10 +4,13 @@
 #include <stdio.h>
 #include <fstream.h>
 
+#include <list>
+
 #include "g.hpp"
-#include "list.hpp"
 #include "board.hpp"
 
+class Game;
+ostream & operator << ( ostream &, const Game & );
 class Game
 {
  public:
@@ -20,24 +23,24 @@ class Game
   int getNumMoves() const { return numMoves_; }
   int getNumGames() const { return numGames_; }
   int getNumWins() const { return numWins_; }
-  int getMaxNumLeft() const { return maxNumLeft_; }
+  //int getMaxNumLeft() const { return maxNumLeft_; }
+  int numHoles() const { return Board::numHoles; }
+
+  int stats[Board::numHoles];
 
  private:
   // no copies
   Game( const Board & ){}
   void operator=( const Game & ){}
 
-  List theGame_;
+  list<Board> theGame_;
 
   int numMoves_;
   int numGames_;
   int numWins_;
-  int maxNumLeft_;
   int numTopWins_;
   
   friend ostream & operator << ( ostream &, const Game & );
 };
-
-ostream & operator << ( ostream &, const Game & );
 
 #endif //  _GAME_HPP_
