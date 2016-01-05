@@ -1,7 +1,8 @@
 #ifndef _HOLE_HPP_
 #define _HOLE_HPP_
 
-#include <fstream.h>
+#include <iostream>
+using namespace std;
 
 #include "g.hpp"
 
@@ -40,4 +41,4 @@ class Hole
 
 ostream& operator << ( ostream &, const Hole & );
 
-#endif _HOLE_HPP_
+#endif //_HOLE_HPP_

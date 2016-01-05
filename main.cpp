@@ -1,4 +1,5 @@
-#include <fstream.h>
+#include <iostream>
+using namespace std;
 
 #include "g.hpp"
 #include "game.hpp"

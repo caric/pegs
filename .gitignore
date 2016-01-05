@@ -1,0 +1,5 @@
+pegs
+*.o
+*.d
+*.sw?
+.makedepend

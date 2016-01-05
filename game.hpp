@@ -2,7 +2,8 @@
 #define _GAME_HPP_
 
 #include <stdio.h>
-#include <fstream.h>
+#include <iostream>
+using namespace std;
 
 #include <list>
 
